@@ -1,0 +1,17 @@
+USE questforgood;
+
+-- Causas sociales
+INSERT INTO causas (nombre, descripcion) VALUES
+('Reforestación Global', 'Financia la siembra de árboles en zonas deforestadas de Latinoamérica.'),
+('Agua para Todos', 'Apoya la construcción de pozos y sistemas de agua potable en comunidades rurales.'),
+('Educación Digital', 'Lleva equipo y acceso a internet a escuelas sin recursos tecnológicos.'),
+('Alimentación Infantil', 'Provee comidas nutritivas a niños en situación de pobreza extrema.');
+
+-- Juegos (categoria_id según el orden en que insertaste las categorías: 1 RPG, 2 Acción, 3 Deportes, 4 Estrategia, 5 Aventura, 6 Multijugador)
+INSERT INTO juegos (categoria_id, nombre, descripcion, precio_original, descuento, imagen_url) VALUES
+(1, 'Aventura Épica RPG', 'Un juego de rol con mundo abierto y narrativa profunda.', 29.99, 10.00, NULL),
+(2, 'Fuerza de Combate', 'Acción trepidante en primera persona.', 19.99, 10.00, NULL),
+(3, 'Liga Virtual 2026', 'Simulador de fútbol con modo carrera.', 24.99, 10.00, NULL),
+(4, 'Reino de Cristal', 'Estrategia por turnos ambientada en un reino medieval fantástico.', 14.99, 10.00, NULL),
+(5, 'Senderos Perdidos', 'Aventura de exploración y puzzles ambientales.', 17.99, 10.00, NULL),
+(6, 'Batalla Interminable', 'Battle royale multijugador con mapas dinámicos.', 0.00, 0.00, NULL);
