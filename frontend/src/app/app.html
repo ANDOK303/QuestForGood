@@ -2,6 +2,7 @@
   <a routerLink="/juegos" class="brand">QuestForGood</a>
   <div class="nav-links">
     <a routerLink="/juegos">Juegos</a>
+    <a routerLink="/dashboard">Impacto</a>
     @if (usuario$ | async; as usuario) {
       <span class="donado">Donado: ${{ usuario.total_donado }}</span>
       <span>{{ usuario.nombre }}</span>

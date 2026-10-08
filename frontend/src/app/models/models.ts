@@ -60,3 +60,9 @@ export interface MetodoPago {
     id: number;
     nombre: string;
 }
+export interface Estadisticas {
+  resumen: { total_compras: number; total_pagado: string; total_donado: string };
+  porCausa: { nombre: string; total_recaudado: string }[];
+  porMes: { mes: string; total: string }[];
+  topJuegos: { nombre: string; ventas: number }[];
+}

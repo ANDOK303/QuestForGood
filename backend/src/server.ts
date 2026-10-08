@@ -7,6 +7,7 @@ import juegosRoutes from './routes/juegosRoutes';
 import usuariosRoutes from './routes/usuariosRoutes';
 import comprasRoutes from './routes/comprasRoutes';
 import metodosPagoRoutes from './routes/metodosPagoRoutes';
+import estadisticasRoutes from './routes/estadisticasRoutes';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/api/juegos', juegosRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/compras', comprasRoutes);
 app.use('/api/metodos-pago', metodosPagoRoutes);
+app.use('/api/estadisticas', estadisticasRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
