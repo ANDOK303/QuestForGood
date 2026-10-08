@@ -15,9 +15,13 @@
   @for (juego of juegos(); track juego.id) {
     <article class="game-card">
       <div class="game-art">
-        <span class="game-letter">{{ juego.nombre.charAt(0) }}</span>
-        <span class="tag">{{ juego.categoria_nombre }}</span>
-      </div>
+  @if (imagen(juego); as logo) {
+    <img [src]="logo" [alt]="juego.nombre">
+  } @else {
+    <span class="game-letter">{{ juego.nombre.charAt(0) }}</span>
+  }
+  <span class="tag">{{ juego.categoria_nombre }}</span>
+</div>
       <div class="game-body">
         <h3>{{ juego.nombre }}</h3>
         <p class="game-desc">{{ juego.descripcion }}</p>

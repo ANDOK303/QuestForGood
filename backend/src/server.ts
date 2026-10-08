@@ -8,6 +8,8 @@ import usuariosRoutes from './routes/usuariosRoutes';
 import comprasRoutes from './routes/comprasRoutes';
 import metodosPagoRoutes from './routes/metodosPagoRoutes';
 import estadisticasRoutes from './routes/estadisticasRoutes';
+import path from 'path';
+import uploadsRoutes from './routes/uploadsRoutes';
 
 dotenv.config();
 
@@ -15,6 +17,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.get('/', (req, res) => {
     res.json({ mensaje: 'API de QuestForGood funcionando' });
@@ -26,6 +29,7 @@ app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/compras', comprasRoutes);
 app.use('/api/metodos-pago', metodosPagoRoutes);
 app.use('/api/estadisticas', estadisticasRoutes);
+app.use('/api/uploads', uploadsRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

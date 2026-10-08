@@ -5,7 +5,7 @@ import { Estadisticas } from '../../models/models';
 
 Chart.register(...registerables);
 Chart.defaults.color = '#e8e8f0';
-Chart.defaults.borderColor = '#2d3348';
+Chart.defaults.borderColor = '#33265a';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,7 +32,7 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   private dibujar(data: Estadisticas): void {
-    const colores = ['#6ee7b7', '#fbbf24', '#60a5fa', '#f87171', '#c084fc'];
+    const colores = ['#a855f7', '#fbbf24', '#38bdf8', '#fb7185', '#34d399'];
 
     new Chart(this.graficaCausas.nativeElement, {
       type: 'doughnut',

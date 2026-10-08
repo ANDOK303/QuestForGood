@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { JuegosService } from '../../services/juegos.service';
 import { CausasService } from '../../services/causas.service';
 import { Categoria, Causa, Juego, JuegoPayload } from '../../models/models';
+import { UploadsService } from '../../services/uploads.service';
+import { resolverImagen } from '../../config';
 
 interface JuegoForm {
   id: number | null;
@@ -35,10 +37,25 @@ export class AdminComponent implements OnInit {
   juegoForm: JuegoForm = this.juegoVacio();
   causaForm: CausaForm = this.causaVacia();
 
-  constructor(
-    private juegosService: JuegosService,
-    private causasService: CausasService
-  ) {}
+constructor(
+  private juegosService: JuegosService,
+  private causasService: CausasService,
+  private uploadsService: UploadsService
+) {}
+imagen = resolverImagen;
+
+subirLogo(evento: Event): void {
+  const input = evento.target as HTMLInputElement;
+  const archivo = input.files?.[0];
+  if (!archivo) {
+    return;
+  }
+  this.limpiar();
+  this.uploadsService.subirImagen(archivo).subscribe({
+    next: res => this.juegoForm.imagen_url = res.url,
+    error: err => this.error.set(err.error?.error || 'No se pudo subir la imagen')
+  });
+}
 
   ngOnInit(): void {
     this.cargarJuegos();

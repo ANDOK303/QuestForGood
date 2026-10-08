@@ -1,17 +1,17 @@
 :root {
-  --bg: #0d0f17;
-  --surface: #161926;
-  --surface-2: #1f2333;
-  --border: #2a2f45;
-  --text: #e8e8f0;
-  --muted: #8a8fa3;
-  --accent: #6ee7b7;
-  --accent-hover: #34d399;
+  --bg: #0c0816;
+  --surface: #151024;
+  --surface-2: #1f1736;
+  --border: #33265a;
+  --text: #f3eeff;
+  --muted: #a094c4;
+  --accent: #a855f7;
+  --accent-hover: #c084fc;
   --gold: #fbbf24;
-  --danger: #f87171;
+  --danger: #f43f5e;
+  --ok: #4ade80;
   --radius: 14px;
 }
-
 * { box-sizing: border-box; }
 
 body {
@@ -277,4 +277,58 @@ tbody tr:last-child td { border-bottom: none; }
   .container { padding: 16px; }
   .hero { padding: 28px 20px; }
   .hero h1 { font-size: 28px; }
+}
+body {
+  background: radial-gradient(circle at top, #231247 0%, var(--bg) 55%) fixed;
+}
+
+.navbar { background: rgba(21, 16, 36, 0.85); }
+
+button, .btn {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: #fff;
+}
+
+button:hover, .btn:hover {
+  background: linear-gradient(135deg, #8b5cf6, #c084fc);
+  color: #fff;
+}
+
+button.danger { color: #fff; }
+
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
+}
+
+.ok {
+  color: var(--ok);
+  background: rgba(74, 222, 128, 0.1);
+  border-color: rgba(74, 222, 128, 0.3);
+}
+
+.hero { background: linear-gradient(135deg, #2a1259 0%, #4c1d95 55%, #7e22ce 100%); }
+.hero p { color: #e9d5ff; }
+
+.game-art { background: linear-gradient(135deg, #7c3aed, #db2777); }
+.game-card:nth-child(6n+2) .game-art { background: linear-gradient(135deg, #6366f1, #a855f7); }
+.game-card:nth-child(6n+3) .game-art { background: linear-gradient(135deg, #c026d3, #7c3aed); }
+.game-card:nth-child(6n+4) .game-art { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+.game-card:nth-child(6n+5) .game-art { background: linear-gradient(135deg, #db2777, #f59e0b); }
+.game-card:nth-child(6n+6) .game-art { background: linear-gradient(135deg, #0ea5e9, #7c3aed); }
+
+.game-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 14px;
+}
+
+.logo-preview {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  padding: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
 }
