@@ -1,0 +1,100 @@
+<h1>Panel de administración</h1>
+
+<div class="tabs">
+    <button [class.secondary]="tab() !== 'juegos'" (click)="cambiarTab('juegos')">Juegos</button>
+    <button [class.secondary]="tab() !== 'causas'" (click)="cambiarTab('causas')">Causas</button>
+</div>
+
+@if (mensaje()) {
+<p class="ok">{{ mensaje() }}</p>
+}
+@if (error()) {
+<p class="error">{{ error() }}</p>
+}
+
+@if (tab() === 'juegos') {
+<div class="card form-grid">
+    <h3>{{ juegoForm.id ? 'Editar juego' : 'Nuevo juego' }}</h3>
+    <input type="text" placeholder="Nombre" [(ngModel)]="juegoForm.nombre">
+    <textarea placeholder="Descripción" [(ngModel)]="juegoForm.descripcion"></textarea>
+    <select [(ngModel)]="juegoForm.categoria_id">
+        <option [ngValue]="null">Sin categoría</option>
+        @for (categoria of categorias(); track categoria.id) {
+        <option [ngValue]="categoria.id">{{ categoria.nombre }}</option>
+        }
+    </select>
+    <input type="number" step="0.01" min="0" placeholder="Precio original" [(ngModel)]="juegoForm.precio_original">
+    <input type="number" step="0.01" min="0" max="100" placeholder="Descuento %" [(ngModel)]="juegoForm.descuento">
+    <input type="text" placeholder="URL de imagen (opcional)" [(ngModel)]="juegoForm.imagen_url">
+    <div class="row-actions">
+        <button (click)="guardarJuego()">Guardar</button>
+        @if (juegoForm.id) {
+        <button class="secondary" (click)="nuevoJuego()">Cancelar</button>
+        }
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Desc. %</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (juego of juegos(); track juego.id) {
+        <tr>
+            <td>{{ juego.nombre }}</td>
+            <td>{{ juego.categoria_nombre }}</td>
+            <td>{{ juego.precio_original }}</td>
+            <td>{{ juego.descuento }}</td>
+            <td class="row-actions">
+                <button class="secondary" (click)="editarJuego(juego)">Editar</button>
+                <button class="danger" (click)="eliminarJuego(juego)">Eliminar</button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+}
+
+@if (tab() === 'causas') {
+<div class="card form-grid">
+    <h3>{{ causaForm.id ? 'Editar causa' : 'Nueva causa' }}</h3>
+    <input type="text" placeholder="Nombre" [(ngModel)]="causaForm.nombre">
+    <textarea placeholder="Descripción" [(ngModel)]="causaForm.descripcion"></textarea>
+    <div class="row-actions">
+        <button (click)="guardarCausa()">Guardar</button>
+        @if (causaForm.id) {
+        <button class="secondary" (click)="nuevaCausa()">Cancelar</button>
+        }
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Recaudado</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (causa of causas(); track causa.id) {
+        <tr>
+            <td>{{ causa.nombre }}</td>
+            <td>{{ causa.descripcion }}</td>
+            <td>{{ causa.total_recaudado }}</td>
+            <td class="row-actions">
+                <button class="secondary" (click)="editarCausa(causa)">Editar</button>
+                <button class="danger" (click)="eliminarCausa(causa)">Eliminar</button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+}

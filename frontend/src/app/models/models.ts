@@ -61,8 +61,31 @@ export interface MetodoPago {
     nombre: string;
 }
 export interface Estadisticas {
-  resumen: { total_compras: number; total_pagado: string; total_donado: string };
-  porCausa: { nombre: string; total_recaudado: string }[];
-  porMes: { mes: string; total: string }[];
-  topJuegos: { nombre: string; ventas: number }[];
+    resumen: { total_compras: number; total_pagado: string; total_donado: string };
+    porCausa: { nombre: string; total_recaudado: string }[];
+    porMes: { mes: string; total: string }[];
+    topJuegos: { nombre: string; ventas: number }[];
+}
+export interface Categoria {
+    id: number;
+    nombre: string;
+}
+
+export interface JuegoPayload {
+    categoria_id: number | null;
+    nombre: string;
+    descripcion: string;
+    precio_original: number;
+    descuento: number;
+    imagen_url: string;
+}
+
+export interface CausaPayload {
+    nombre: string;
+    descripcion: string;
+}
+
+export interface MensajeRespuesta {
+    mensaje: string;
+    id?: number;
 }

@@ -4,6 +4,9 @@
     <a routerLink="/juegos">Juegos</a>
     <a routerLink="/dashboard">Impacto</a>
     @if (usuario$ | async; as usuario) {
+      @if (usuario.rol_id === 1) {
+        <a routerLink="/admin">Admin</a>
+      }
       <span class="donado">Donado: ${{ usuario.total_donado }}</span>
       <span>{{ usuario.nombre }}</span>
       <button (click)="salir()">Salir</button>

@@ -4,6 +4,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegistroComponent } from './pages/registro/registro.component';
 import { CompraComponent } from './pages/compra/compra.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { AdminComponent } from './pages/admin/admin.component';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'juegos', pathMatch: 'full' },
@@ -12,5 +14,6 @@ export const routes: Routes = [
   { path: 'registro', component: RegistroComponent },
   { path: 'compra/:id', component: CompraComponent },
   { path: 'dashboard', component: DashboardComponent },
+  { path: 'admin', component: AdminComponent, canActivate: [adminGuard] },
   { path: '**', redirectTo: 'juegos' }
 ];
