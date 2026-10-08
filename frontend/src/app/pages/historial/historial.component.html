@@ -1,0 +1,44 @@
+<h1>Mis compras</h1>
+
+@if (error()) {
+<p class="error">{{ error() }}</p>
+}
+
+@if (compras().length > 0) {
+<div class="stats">
+    <div class="stat">
+        <span class="stat-label">Compras realizadas</span>
+        <span class="stat-value">{{ compras().length }}</span>
+    </div>
+    <div class="stat">
+        <span class="stat-label">Total donado</span>
+        <span class="stat-value donation">${{ totalDonado().toFixed(2) }}</span>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Juego</th>
+            <th>Causa</th>
+            <th>Pagado</th>
+            <th>Donado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (compra of compras(); track compra.id) {
+        <tr>
+            <td>{{ compra.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ compra.juego_nombre }}</td>
+            <td>{{ compra.causa_nombre }}</td>
+            <td>${{ compra.monto_pagado }}</td>
+            <td class="donation">${{ compra.monto_donado }}</td>
+        </tr>
+        }
+    </tbody>
+</table>
+} @else if (!error()) {
+<p>Todavía no has hecho compras.</p>
+<a class="btn" routerLink="/juegos">Ir al catálogo</a>
+}

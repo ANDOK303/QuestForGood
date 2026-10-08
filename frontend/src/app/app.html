@@ -4,6 +4,7 @@
     <a routerLink="/juegos">Juegos</a>
     <a routerLink="/dashboard">Impacto</a>
     @if (usuario$ | async; as usuario) {
+      <a routerLink="/historial">Mis compras</a>
       @if (usuario.rol_id === 1) {
         <a routerLink="/admin">Admin</a>
       }
