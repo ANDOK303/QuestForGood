@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { crearCompra, getComprasPorUsuario } from '../controllers/comprasController';
+import { verificarToken } from '../middlewares/auth';
 
 const router = Router();
 
-router.post('/', crearCompra);
-router.get('/usuario/:usuarioId', getComprasPorUsuario);
+router.post('/', verificarToken, crearCompra);
+router.get('/usuario/:usuarioId', verificarToken, getComprasPorUsuario);
 
 export default router;

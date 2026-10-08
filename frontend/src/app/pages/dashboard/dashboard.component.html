@@ -1,34 +1,38 @@
 <h1>Dashboard de impacto</h1>
+<p class="page-sub">Lo que entre todos hemos logrado con cada compra.</p>
+
 @if (error()) {
-<p class="error">{{ error() }}</p>
+  <p class="error">{{ error() }}</p>
 }
+
 @if (datos(); as d) {
-<div class="stats">
+  <div class="stats">
     <div class="stat">
-        <span class="stat-label">Compras realizadas</span>
-        <span class="stat-value">{{ d.resumen.total_compras }}</span>
+      <span class="stat-label">Compras realizadas</span>
+      <span class="stat-value">{{ d.resumen.total_compras }}</span>
     </div>
     <div class="stat">
-        <span class="stat-label">Total pagado</span>
-        <span class="stat-value">${{ d.resumen.total_pagado }}</span>
+      <span class="stat-label">Total pagado</span>
+      <span class="stat-value">${{ d.resumen.total_pagado }}</span>
     </div>
     <div class="stat">
-        <span class="stat-label">Total donado</span>
-        <span class="stat-value donation">${{ d.resumen.total_donado }}</span>
+      <span class="stat-label">Total donado</span>
+      <span class="stat-value donation">${{ d.resumen.total_donado }}</span>
     </div>
-</div>
+  </div>
 }
+
 <div class="charts">
-    <div class="card">
-        <h3>Donado por causa</h3>
-        <div class="chart-box"><canvas #graficaCausas></canvas></div>
-    </div>
-    <div class="card">
-        <h3>Donado por mes</h3>
-        <div class="chart-box"><canvas #graficaMeses></canvas></div>
-    </div>
-    <div class="card">
-        <h3>Juegos más comprados</h3>
-        <div class="chart-box"><canvas #graficaJuegos></canvas></div>
-    </div>
+  <div class="card">
+    <h3>Donado por causa</h3>
+    <div class="chart-box"><canvas #graficaCausas></canvas></div>
+  </div>
+  <div class="card">
+    <h3>Donado por mes</h3>
+    <div class="chart-box"><canvas #graficaMeses></canvas></div>
+  </div>
+  <div class="card">
+    <h3>Juegos más comprados</h3>
+    <div class="chart-box"><canvas #graficaJuegos></canvas></div>
+  </div>
 </div>

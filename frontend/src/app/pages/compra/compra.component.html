@@ -1,31 +1,49 @@
 @if (juego(); as j) {
-  <div class="auth-box">
-    <h2>Confirmar compra</h2>
-    <h3>{{ j.nombre }}</h3>
+  <div class="auth-box wide">
     @if (resultado(); as res) {
-      <p class="ok">{{ res.mensaje }}</p>
-      <p>Pagaste ${{ res.monto_pagado }}</p>
-      <p class="donation">Donaste ${{ res.monto_donado }}</p>
-      <a routerLink="/juegos">Volver al catálogo</a>
+      <div>
+        <h2>¡Compra exitosa!</h2>
+        <p class="auth-sub">Gracias por apoyar una buena causa.</p>
+      </div>
+      <div class="summary">
+        <div class="summary-row"><span>Juego</span><strong>{{ j.nombre }}</strong></div>
+        <div class="summary-row"><span>Pagaste</span><strong>${{ res.monto_pagado }}</strong></div>
+        <div class="summary-row total"><span>Donaste</span><strong class="donation">${{ res.monto_donado }}</strong></div>
+      </div>
+      <a class="btn btn-block" routerLink="/historial">Ver mis compras</a>
+      <a class="auth-footer" routerLink="/juegos">Volver al catálogo</a>
     } @else {
-      <p>Precio con descuento: <span class="price">${{ precioFinal().toFixed(2) }}</span></p>
-      <p class="donation">Donación: ${{ donacion().toFixed(2) }}</p>
-      <select [(ngModel)]="causaId">
-        <option [ngValue]="0">Elige una causa</option>
-        @for (causa of causas(); track causa.id) {
-          <option [ngValue]="causa.id">{{ causa.nombre }}</option>
-        }
-      </select>
-      <select [(ngModel)]="metodoId">
-        <option [ngValue]="0">Método de pago</option>
-        @for (metodo of metodos(); track metodo.id) {
-          <option [ngValue]="metodo.id">{{ metodo.nombre }}</option>
-        }
-      </select>
+      <div>
+        <h2>Confirmar compra</h2>
+        <p class="auth-sub">{{ j.nombre }}</p>
+      </div>
+      <div class="summary">
+        <div class="summary-row"><span>Precio original</span><span class="old">${{ j.precio_original }}</span></div>
+        <div class="summary-row"><span>Precio con descuento</span><span class="price">${{ precioFinal().toFixed(2) }}</span></div>
+        <div class="summary-row total"><span>Donación a la causa</span><strong class="donation">${{ donacion().toFixed(2) }}</strong></div>
+      </div>
+      <div class="field">
+        <label for="causa">Causa a apoyar</label>
+        <select id="causa" [(ngModel)]="causaId">
+          <option [ngValue]="0">Elige una causa</option>
+          @for (causa of causas(); track causa.id) {
+            <option [ngValue]="causa.id">{{ causa.nombre }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label for="metodo">Método de pago</label>
+        <select id="metodo" [(ngModel)]="metodoId">
+          <option [ngValue]="0">Elige un método</option>
+          @for (metodo of metodos(); track metodo.id) {
+            <option [ngValue]="metodo.id">{{ metodo.nombre }}</option>
+          }
+        </select>
+      </div>
       @if (error()) {
         <p class="error">{{ error() }}</p>
       }
-      <button (click)="confirmar()">Confirmar compra</button>
+      <button class="btn-block" (click)="confirmar()">Confirmar compra</button>
     }
   </div>
 } @else if (error()) {

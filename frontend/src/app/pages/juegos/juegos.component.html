@@ -1,23 +1,37 @@
-<h1>Catálogo de juegos</h1>
+<section class="hero">
+  <h1>Juega. Ahorra. <span class="accent">Ayuda.</span></h1>
+  <p>Compra tus juegos con descuento y una parte de cada compra se destina a una causa social que tú eliges.</p>
+  <a class="btn" routerLink="/dashboard">Ver nuestro impacto</a>
+</section>
+
+<h2>Catálogo</h2>
+<p class="page-sub">Elige un juego y decide a qué causa va tu donación.</p>
+
 @if (error()) {
   <p class="error">{{ error() }}</p>
 }
+
 <div class="grid">
   @for (juego of juegos(); track juego.id) {
-    <div class="card">
-      <span class="tag">{{ juego.categoria_nombre }}</span>
-      <h3>{{ juego.nombre }}</h3>
-      <p>{{ juego.descripcion }}</p>
-      @if (precioFinal(juego) === 0) {
-        <p class="price">Gratis</p>
-      } @else {
-        <p>
-          <span class="old">${{ juego.precio_original }}</span>
-          <span class="price">${{ precioFinal(juego).toFixed(2) }}</span>
-        </p>
-        <p class="donation">Donas ${{ donacion(juego).toFixed(2) }} a una causa</p>
-      }
-      <a class="btn" [routerLink]="['/compra', juego.id]">Comprar</a>
-    </div>
+    <article class="game-card">
+      <div class="game-art">
+        <span class="game-letter">{{ juego.nombre.charAt(0) }}</span>
+        <span class="tag">{{ juego.categoria_nombre }}</span>
+      </div>
+      <div class="game-body">
+        <h3>{{ juego.nombre }}</h3>
+        <p class="game-desc">{{ juego.descripcion }}</p>
+        @if (precioFinal(juego) === 0) {
+          <span class="price">Gratis</span>
+        } @else {
+          <div>
+            <span class="old">${{ juego.precio_original }}</span>
+            <span class="price">${{ precioFinal(juego).toFixed(2) }}</span>
+          </div>
+          <span class="donation">Donas ${{ donacion(juego).toFixed(2) }} a una causa</span>
+        }
+        <a class="btn btn-block" [routerLink]="['/compra', juego.id]">Comprar</a>
+      </div>
+    </article>
   }
 </div>

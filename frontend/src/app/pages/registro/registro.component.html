@@ -1,11 +1,23 @@
 <div class="auth-box">
-  <h2>Crear cuenta</h2>
-  <input type="text" placeholder="Nombre" [(ngModel)]="nombre">
-  <input type="email" placeholder="Correo" [(ngModel)]="correo">
-  <input type="password" placeholder="Contraseña" [(ngModel)]="contrasena">
+  <div>
+    <h2>Crea tu cuenta</h2>
+    <p class="auth-sub">Únete y convierte tus compras en ayuda.</p>
+  </div>
+  <div class="field">
+    <label for="nombre">Nombre</label>
+    <input id="nombre" type="text" placeholder="Tu nombre" [(ngModel)]="nombre">
+  </div>
+  <div class="field">
+    <label for="correo">Correo</label>
+    <input id="correo" type="email" placeholder="correo@ejemplo.com" [(ngModel)]="correo">
+  </div>
+  <div class="field">
+    <label for="contrasena">Contraseña</label>
+    <input id="contrasena" type="password" placeholder="Crea una contraseña" [(ngModel)]="contrasena" (keyup.enter)="registrar()">
+  </div>
   @if (error()) {
     <p class="error">{{ error() }}</p>
   }
-  <button (click)="registrar()">Registrarme</button>
-  <p>¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+  <button class="btn-block" (click)="registrar()">Registrarme</button>
+  <p class="auth-footer">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
 </div>

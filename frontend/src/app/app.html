@@ -1,22 +1,27 @@
-<nav class="navbar">
-  <a routerLink="/juegos" class="brand">QuestForGood</a>
-  <div class="nav-links">
-    <a routerLink="/juegos">Juegos</a>
-    <a routerLink="/dashboard">Impacto</a>
-    @if (usuario$ | async; as usuario) {
-      <a routerLink="/historial">Mis compras</a>
-      @if (usuario.rol_id === 1) {
-        <a routerLink="/admin">Admin</a>
+<header class="navbar">
+  <div class="nav-inner">
+    <a routerLink="/juegos" class="brand">QuestForGood</a>
+    <nav class="nav-links">
+      <a routerLink="/juegos">Juegos</a>
+      <a routerLink="/dashboard">Impacto</a>
+      @if (usuario$ | async; as usuario) {
+        <a routerLink="/historial">Mis compras</a>
+        @if (usuario.rol_id === 1) {
+          <a routerLink="/admin">Admin</a>
+        }
+        <span class="donado">Donado: ${{ usuario.total_donado }}</span>
+        <span class="user-name">{{ usuario.nombre }}</span>
+        <button class="secondary" (click)="salir()">Salir</button>
+      } @else {
+        <a routerLink="/login">Entrar</a>
+        <a class="btn" routerLink="/registro">Registrarse</a>
       }
-      <span class="donado">Donado: ${{ usuario.total_donado }}</span>
-      <span>{{ usuario.nombre }}</span>
-      <button (click)="salir()">Salir</button>
-    } @else {
-      <a routerLink="/login">Entrar</a>
-      <a routerLink="/registro">Registrarse</a>
-    }
+    </nav>
   </div>
-</nav>
-<main>
+</header>
+
+<main class="container">
   <router-outlet />
 </main>
+
+<footer class="footer">QuestForGood · Proyecto académico, las compras son simuladas</footer>

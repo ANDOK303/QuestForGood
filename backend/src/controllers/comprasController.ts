@@ -1,16 +1,19 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import pool from '../config/db';
+import { AuthRequest } from '../middlewares/auth';
 
-export const crearCompra = async (req: Request, res: Response): Promise<void> => {
+export const crearCompra = async (req: AuthRequest, res: Response): Promise<void> => {
+    const usuarioId = req.usuario!.id;
+    const { juego_id, causa_id, metodo_pago_id } = req.body;
+
+    if (!juego_id || !causa_id || !metodo_pago_id) {
+        res.status(400).json({ error: 'Juego, causa y método de pago son obligatorios' });
+        return;
+    }
+
+    const conexion = await pool.getConnection();
     try {
-        const { usuario_id, juego_id, causa_id, metodo_pago_id } = req.body;
-
-        if (!usuario_id || !juego_id || !causa_id || !metodo_pago_id) {
-            res.status(400).json({ error: 'Todos los campos son obligatorios' });
-            return;
-        }
-
-        const [juegos]: any = await pool.query('SELECT * FROM juegos WHERE id = ?', [juego_id]);
+        const [juegos]: any = await conexion.query('SELECT * FROM juegos WHERE id = ?', [juego_id]);
         if (juegos.length === 0) {
             res.status(404).json({ error: 'Juego no encontrado' });
             return;
@@ -19,22 +22,24 @@ export const crearCompra = async (req: Request, res: Response): Promise<void> =>
         const juego = juegos[0];
         const precioOriginal = Number(juego.precio_original);
         const descuentoPorcentaje = Number(juego.descuento);
-
         const montoPagado = precioOriginal - (precioOriginal * (descuentoPorcentaje / 100));
         const montoDonado = montoPagado * 0.05;
 
-        const [resultado]: any = await pool.query(
+        await conexion.beginTransaction();
+
+        const [resultado]: any = await conexion.query(
             'INSERT INTO compras (usuario_id, juego_id, causa_id, metodo_pago_id, monto_pagado, monto_donado) VALUES (?, ?, ?, ?, ?, ?)',
-            [usuario_id, juego_id, causa_id, metodo_pago_id, montoPagado, montoDonado]
+            [usuarioId, juego_id, causa_id, metodo_pago_id, montoPagado, montoDonado]
         );
 
-        await pool.query('UPDATE causas SET total_recaudado = total_recaudado + ? WHERE id = ?', [montoDonado, causa_id]);
-        await pool.query('UPDATE usuarios SET total_donado = total_donado + ? WHERE id = ?', [montoDonado, usuario_id]);
-
-        await pool.query(
+        await conexion.query('UPDATE causas SET total_recaudado = total_recaudado + ? WHERE id = ?', [montoDonado, causa_id]);
+        await conexion.query('UPDATE usuarios SET total_donado = total_donado + ? WHERE id = ?', [montoDonado, usuarioId]);
+        await conexion.query(
             'INSERT INTO notificaciones (usuario_id, mensaje) VALUES (?, ?)',
-            [usuario_id, `¡Gracias por tu compra! Donaste $${montoDonado.toFixed(2)} a una buena causa.`]
+            [usuarioId, `¡Gracias por tu compra! Donaste $${montoDonado.toFixed(2)} a una buena causa.`]
         );
+
+        await conexion.commit();
 
         res.status(201).json({
             mensaje: 'Compra realizada con éxito',
@@ -43,12 +48,26 @@ export const crearCompra = async (req: Request, res: Response): Promise<void> =>
             monto_donado: montoDonado.toFixed(2)
         });
     } catch (error: any) {
+        await conexion.rollback();
+        if (error.code === 'ER_NO_REFERENCED_ROW_2') {
+            res.status(400).json({ error: 'Causa o método de pago inválido' });
+            return;
+        }
         res.status(500).json({ error: error.message });
+    } finally {
+        conexion.release();
     }
 };
 
-export const getComprasPorUsuario = async (req: Request, res: Response): Promise<void> => {
+export const getComprasPorUsuario = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
+        const usuarioId = Number(req.params.usuarioId);
+
+        if (req.usuario!.id !== usuarioId && req.usuario!.rol_id !== 1) {
+            res.status(403).json({ error: 'No puedes ver las compras de otro usuario' });
+            return;
+        }
+
         const [rows] = await pool.query(`
             SELECT c.*, j.nombre AS juego_nombre, ca.nombre AS causa_nombre
             FROM compras c
@@ -56,7 +75,7 @@ export const getComprasPorUsuario = async (req: Request, res: Response): Promise
             JOIN causas ca ON c.causa_id = ca.id
             WHERE c.usuario_id = ?
             ORDER BY c.fecha DESC
-        `, [req.params.usuarioId]);
+        `, [usuarioId]);
         res.json(rows);
     } catch (error: any) {
         res.status(500).json({ error: error.message });
