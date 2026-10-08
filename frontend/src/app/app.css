@@ -1,0 +1,25 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1c1f2b;
+  padding: 12px 24px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.brand {
+  font-weight: bold;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.donado {
+  color: #fbbf24;
+}

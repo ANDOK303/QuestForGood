@@ -1,0 +1,17 @@
+<nav class="navbar">
+  <a routerLink="/juegos" class="brand">QuestForGood</a>
+  <div class="nav-links">
+    <a routerLink="/juegos">Juegos</a>
+    @if (usuario$ | async; as usuario) {
+      <span class="donado">Donado: ${{ usuario.total_donado }}</span>
+      <span>{{ usuario.nombre }}</span>
+      <button (click)="salir()">Salir</button>
+    } @else {
+      <a routerLink="/login">Entrar</a>
+      <a routerLink="/registro">Registrarse</a>
+    }
+  </div>
+</nav>
+<main>
+  <router-outlet />
+</main>

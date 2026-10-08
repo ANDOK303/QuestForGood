@@ -1,0 +1,33 @@
+@if (juego(); as j) {
+  <div class="auth-box">
+    <h2>Confirmar compra</h2>
+    <h3>{{ j.nombre }}</h3>
+    @if (resultado(); as res) {
+      <p class="ok">{{ res.mensaje }}</p>
+      <p>Pagaste ${{ res.monto_pagado }}</p>
+      <p class="donation">Donaste ${{ res.monto_donado }}</p>
+      <a routerLink="/juegos">Volver al catálogo</a>
+    } @else {
+      <p>Precio con descuento: <span class="price">${{ precioFinal().toFixed(2) }}</span></p>
+      <p class="donation">Donación: ${{ donacion().toFixed(2) }}</p>
+      <select [(ngModel)]="causaId">
+        <option [ngValue]="0">Elige una causa</option>
+        @for (causa of causas(); track causa.id) {
+          <option [ngValue]="causa.id">{{ causa.nombre }}</option>
+        }
+      </select>
+      <select [(ngModel)]="metodoId">
+        <option [ngValue]="0">Método de pago</option>
+        @for (metodo of metodos(); track metodo.id) {
+          <option [ngValue]="metodo.id">{{ metodo.nombre }}</option>
+        }
+      </select>
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+      <button (click)="confirmar()">Confirmar compra</button>
+    }
+  </div>
+} @else if (error()) {
+  <p class="error">{{ error() }}</p>
+}

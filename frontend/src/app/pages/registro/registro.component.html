@@ -1,0 +1,11 @@
+<div class="auth-box">
+  <h2>Crear cuenta</h2>
+  <input type="text" placeholder="Nombre" [(ngModel)]="nombre">
+  <input type="email" placeholder="Correo" [(ngModel)]="correo">
+  <input type="password" placeholder="Contraseña" [(ngModel)]="contrasena">
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <button (click)="registrar()">Registrarme</button>
+  <p>¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+</div>
