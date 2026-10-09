@@ -10,7 +10,14 @@
           <a routerLink="/admin">Admin</a>
         }
         <span class="donado">Donado: ${{ usuario.total_donado }}</span>
-        <span class="user-name">{{ usuario.nombre }}</span>
+        <a routerLink="/perfil" class="user-chip">
+          @if (foto(usuario.foto_url); as imagen) {
+            <img class="avatar" [src]="imagen" [alt]="usuario.nombre">
+          } @else {
+            <span class="avatar avatar-letter">{{ usuario.nombre.charAt(0) }}</span>
+          }
+          <span class="user-name">{{ usuario.nombre }}</span>
+        </a>
         <button class="secondary" (click)="salir()">Salir</button>
       } @else {
         <a routerLink="/login">Entrar</a>

@@ -1,5 +1,5 @@
-CREATE DATABASE questforgood;
-USE questforgood;
+CREATE DATABASE questforgood_in5bv;
+USE questforgood_in5bv;
 
 -- Tipos de usuario
 CREATE TABLE roles (

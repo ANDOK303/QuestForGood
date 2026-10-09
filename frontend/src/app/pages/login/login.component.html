@@ -1,19 +1,29 @@
 <div class="auth-box">
-  <div>
-    <h2>Bienvenido de vuelta</h2>
-    <p class="auth-sub">Inicia sesión para comprar y donar.</p>
-  </div>
-  <div class="field">
-    <label for="correo">Correo</label>
-    <input id="correo" type="email" placeholder="correo@ejemplo.com" [(ngModel)]="correo">
-  </div>
-  <div class="field">
-    <label for="contrasena">Contraseña</label>
-    <input id="contrasena" type="password" placeholder="Tu contraseña" [(ngModel)]="contrasena" (keyup.enter)="ingresar()">
-  </div>
-  @if (error()) {
-    <p class="error">{{ error() }}</p>
+  @if (cupon(); as regalo) {
+    <div class="gift">
+      <p class="auth-sub">¡Tienes un regalo por iniciar sesión!</p>
+      <div class="gift-value">{{ regalo.descuento_extra | number:'1.0-0' }}%</div>
+      <p class="gift-code">{{ regalo.codigo }}</p>
+      <p class="auth-sub">{{ regalo.descripcion }}. Lo encuentras en tu perfil.</p>
+    </div>
+    <button class="btn-block" (click)="continuar()">Ir al catálogo</button>
+  } @else {
+    <div>
+      <h2>Bienvenido de vuelta</h2>
+      <p class="auth-sub">Inicia sesión para comprar y donar.</p>
+    </div>
+    <div class="field">
+      <label for="correo">Correo</label>
+      <input id="correo" type="email" placeholder="correo@ejemplo.com" [(ngModel)]="correo">
+    </div>
+    <div class="field">
+      <label for="contrasena">Contraseña</label>
+      <input id="contrasena" type="password" placeholder="Tu contraseña" [(ngModel)]="contrasena" (keyup.enter)="ingresar()">
+    </div>
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+    <button class="btn-block" (click)="ingresar()">Entrar</button>
+    <p class="auth-footer">¿No tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
   }
-  <button class="btn-block" (click)="ingresar()">Entrar</button>
-  <p class="auth-footer">¿No tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
 </div>

@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 
 import causasRoutes from './routes/causasRoutes';
 import juegosRoutes from './routes/juegosRoutes';
@@ -8,8 +9,8 @@ import usuariosRoutes from './routes/usuariosRoutes';
 import comprasRoutes from './routes/comprasRoutes';
 import metodosPagoRoutes from './routes/metodosPagoRoutes';
 import estadisticasRoutes from './routes/estadisticasRoutes';
-import path from 'path';
 import uploadsRoutes from './routes/uploadsRoutes';
+import perfilRoutes from './routes/perfilRoutes';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use('/api/compras', comprasRoutes);
 app.use('/api/metodos-pago', metodosPagoRoutes);
 app.use('/api/estadisticas', estadisticasRoutes);
 app.use('/api/uploads', uploadsRoutes);
+app.use('/api/perfil', perfilRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
