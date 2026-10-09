@@ -1,0 +1,33 @@
+<header class="navbar">
+  <div class="nav-inner">
+    <a routerLink="/juegos" class="brand">QuestForGood</a>
+    <nav class="nav-links">
+      <a routerLink="/juegos">Juegos</a>
+      <a routerLink="/dashboard">Impacto</a>
+      @if (usuario$ | async; as usuario) {
+        <a routerLink="/historial">Mis compras</a>
+        @if (usuario.rol_id === 1) {
+          <a routerLink="/admin">Admin</a>
+        }
+        <span class="donado">Donado: ${{ usuario.total_donado }}</span>
+        <a routerLink="/perfil" class="user-chip">
+          @if (foto(usuario.foto_url); as imagen) {
+            <img class="avatar" [src]="imagen" [alt]="usuario.nombre">
+          } @else {
+            <span class="avatar avatar-letter">{{ usuario.nombre.charAt(0) }}</span>
+          }
+          <span class="user-name">{{ usuario.nombre }}</span>
+        </a>
+        <button class="secondary" (click)="salir()">Salir</button>
+      } @else {
+        <a routerLink="/login">Entrar</a>
+        <a class="btn" routerLink="/registro">Registrarse</a>
+      }
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <router-outlet />
+</main>
+

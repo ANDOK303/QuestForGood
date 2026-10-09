@@ -1,0 +1,143 @@
+@if (mensaje()) {
+  <p class="ok">{{ mensaje() }}</p>
+}
+@if (error()) {
+  <p class="error">{{ error() }}</p>
+}
+
+@if (perfil(); as p) {
+  <section class="card profile-header">
+    <div class="profile-photo">
+      @if (foto(p.usuario.foto_url); as imagen) {
+        <img class="avatar avatar-lg" [src]="imagen" [alt]="p.usuario.nombre">
+      } @else {
+        <span class="avatar avatar-lg avatar-letter">{{ p.usuario.nombre.charAt(0) }}</span>
+      }
+      <label class="btn btn-small">
+        Cambiar foto
+        <input type="file" hidden accept="image/png,image/jpeg,image/webp,image/gif" (change)="cambiarFoto($event)">
+      </label>
+      @if (p.usuario.foto_url) {
+        <button class="secondary btn-small" (click)="quitarFoto()">Quitar foto</button>
+      }
+    </div>
+    <div class="profile-info">
+      <h1>{{ p.usuario.nombre }}</h1>
+      <p class="page-sub">{{ p.usuario.correo }}</p>
+      <div class="profile-tags">
+        <span class="tag tag-solid">{{ p.usuario.rol_nombre }}</span>
+        <span class="tag tag-solid">Miembro desde {{ p.usuario.fecha_registro | date:'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="inline-form">
+        <input type="text" placeholder="Tu nombre" [(ngModel)]="nombre" (keyup.enter)="guardarNombre()">
+        <button (click)="guardarNombre()">Guardar</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-label">Compras realizadas</span>
+      <span class="stat-value">{{ p.resumen.total_compras }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Total gastado</span>
+      <span class="stat-value">${{ p.resumen.total_gastado }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Total donado</span>
+      <span class="stat-value donation">${{ p.usuario.total_donado }}</span>
+    </div>
+  </div>
+
+  <h2 class="section-title">Mis cupones</h2>
+  <p class="page-sub">Los cupones de regalo por iniciar sesión duran pocos días, úsalos pronto.</p>
+  @if (p.cupones.length > 0) {
+    <div class="coupon-grid">
+      @for (cupon of p.cupones; track cupon.id) {
+        <div class="coupon" [class.coupon-off]="!cupon.vigente">
+          <div class="coupon-value">{{ cupon.descuento_extra | number:'1.0-0' }}%</div>
+          <div>
+            <div class="coupon-code">{{ cupon.codigo }}</div>
+            <div class="coupon-desc">{{ cupon.descripcion }}</div>
+            @if (cupon.usado) {
+              <span class="coupon-state">Usado</span>
+            } @else if (!cupon.vigente) {
+              <span class="coupon-state">Vencido</span>
+            } @else {
+              <span class="coupon-state vigente">Vence el {{ cupon.fecha_expira | date:'dd/MM/yyyy' }}</span>
+            }
+            <span class="tag tag-solid">{{ cupon.tipo === 'login' ? 'Regalo de login' : 'Exclusivo' }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="muted">Todavía no tienes cupones. Inicia sesión cada día para recibir uno.</p>
+  }
+
+  <h2 class="section-title">Juegos que me interesan</h2>
+  <div class="inline-form">
+    <select [(ngModel)]="interesId">
+      <option [ngValue]="0">Agregar un juego...</option>
+      @for (juego of disponibles(); track juego.id) {
+        <option [ngValue]="juego.id">{{ juego.nombre }}</option>
+      }
+    </select>
+    <button (click)="agregarInteres()">Agregar</button>
+  </div>
+  @if (p.intereses.length > 0) {
+    <div class="interest-grid">
+      @for (juego of p.intereses; track juego.id) {
+        <div class="interest-card">
+          @if (foto(juego.imagen_url); as logo) {
+            <img class="interest-logo" [src]="logo" [alt]="juego.nombre">
+          } @else {
+            <span class="interest-logo interest-letter">{{ juego.nombre.charAt(0) }}</span>
+          }
+          <div class="interest-info">
+            <strong>{{ juego.nombre }}</strong>
+            <span class="muted">{{ juego.categoria_nombre }}</span>
+          </div>
+          <div class="row-actions">
+            <a class="btn btn-small" [routerLink]="['/compra', juego.id]">Comprar</a>
+            <button class="secondary btn-small" (click)="quitarInteres(juego.id)">Quitar</button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="muted">Aún no has marcado juegos de interés.</p>
+  }
+
+  <h2 class="section-title">Compras recientes</h2>
+  @if (p.compras.length > 0) {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Juego</th>
+            <th>Causa</th>
+            <th>Pagado</th>
+            <th>Donado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (compra of p.compras; track compra.id) {
+            <tr>
+              <td>{{ compra.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ compra.juego_nombre }}</td>
+              <td>{{ compra.causa_nombre }}</td>
+              <td>${{ compra.monto_pagado }}</td>
+              <td class="donation">${{ compra.monto_donado }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="page-sub"><a routerLink="/historial">Ver todo mi historial</a></p>
+  } @else {
+    <p class="muted">Todavía no has hecho compras.</p>
+  }
+}
