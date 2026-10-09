@@ -3,16 +3,18 @@ import path from 'path';
 import fs from 'fs';
 import pool from '../config/db';
 import { AuthRequest } from '../middlewares/auth';
-
-const carpetaUploads = path.join(__dirname, '..', '..', 'uploads');
+import { carpetaUploads } from '../config/uploads';
 
 const borrarArchivo = (url: string | null): void => {
     if (!url || !url.startsWith('/uploads/')) {
         return;
     }
-    fs.unlink(path.join(carpetaUploads, path.basename(url)), () => undefined);
+    const ruta = path.resolve(carpetaUploads, url.replace('/uploads/', ''));
+    if (!ruta.startsWith(carpetaUploads + path.sep)) {
+        return;
+    }
+    fs.unlink(ruta, () => undefined);
 };
-
 export const getPerfil = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const usuarioId = req.usuario!.id;
@@ -97,7 +99,7 @@ export const subirFoto = async (req: AuthRequest, res: Response): Promise<void> 
         return;
     }
 
-    const nueva = `/uploads/${req.file.filename}`;
+    const nueva = `/uploads/perfiles/${req.file.filename}`;
     try {
         const usuarioId = req.usuario!.id;
         const [rows]: any = await pool.query('SELECT foto_url FROM usuarios WHERE id = ?', [usuarioId]);

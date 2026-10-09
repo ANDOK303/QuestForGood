@@ -51,8 +51,16 @@ subirLogo(evento: Event): void {
     return;
   }
   this.limpiar();
-  this.uploadsService.subirImagen(archivo).subscribe({
-    next: res => this.juegoForm.imagen_url = res.url,
+  if (!this.juegoForm.nombre.trim()) {
+    this.error.set('Escribe primero el nombre del juego para guardar su logo');
+    input.value = '';
+    return;
+  }
+  this.uploadsService.subirLogoJuego(archivo, this.juegoForm.nombre.trim()).subscribe({
+    next: res => {
+      this.juegoForm.imagen_url = res.url;
+      this.mensaje.set('Logo subido. Pulsa Guardar para aplicarlo al juego.');
+    },
     error: err => this.error.set(err.error?.error || 'No se pudo subir la imagen')
   });
 }

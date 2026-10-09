@@ -194,3 +194,5 @@ WHERE c.id > 0;
 UPDATE usuarios u
 SET u.total_donado = (SELECT COALESCE(SUM(m.monto_donado), 0) FROM compras m WHERE m.usuario_id = u.id)
 WHERE u.id > 0;
+INSERT INTO usuarios (rol_id, nombre, correo, contrasena)
+VALUES (1, 'Administrador', 'admin@questforgood.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.');
