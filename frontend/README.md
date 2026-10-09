@@ -1,59 +1,117 @@
-# Frontend
+#  QuestForGood
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.2.
+**Juega. Ahorra. Ayuda.**
 
-## Development server
+QuestForGood es una tienda web de videojuegos con impacto social: cada compra aplica un descuento al juego y destina el **5 %** del monto pagado a una causa social que elige el propio usuario (reforestación, agua potable, educación, etc.). Incluye un dashboard público con el impacto acumulado, perfil de usuario con cupones y un panel de administración.
 
-To start a local development server, run:
+##  Características
 
-```bash
-ng serve
+- Catálogo de juegos con descuento, categorías y logos.
+- Compra con selección de **causa** a apoyar y **método de pago** (simulado).
+- Registro e inicio de sesión con JWT (sesión de 2 horas).
+- **Cupón de regalo diario** al iniciar sesión.
+- Perfil: foto, nombre, juegos de interés, cupones y compras recientes.
+- Historial de compras y total donado.
+- Dashboard de impacto con gráficas (donado por causa, por mes y juegos más comprados).
+- Panel de administración (CRUD de juegos y causas, subida de logos).
+
+##  Stack
+
+| Capa | Tecnología |
+|------|-----------|
+| Frontend | Angular 22 (standalone components, signals), Chart.js |
+| Backend | Node.js, Express 5, TypeScript, JWT, bcryptjs, multer |
+| Base de datos | MySQL (mysql2) |
+##  Estructura
+```
+QuestForGood/
+├── backend/     API REST (Express + TypeScript)
+├── frontend/    Aplicación Angular
+└── DB/          Scripts SQL (esquema, datos y tablas adicionales)
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+##  Requisitos
 
-## Code scaffolding
+- Node.js 20 o superior y npm
+- MySQL 8 o superior
+##  Instalación rápida
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 1. Base de datos
 
-```bash
-ng generate component component-name
-```
+Ejecuta los scripts de la carpeta `DB/` **en este orden**:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+1. `Base de datos` → crea la BD `questforgood_in5bv`, tablas, roles, categorías y métodos de pago.
+2. `inserts` → causas y juegos iniciales.
+3. `tablas adicionaleseinserts` → foto de perfil, intereses, cupones, más datos de prueba y el usuario administrador.
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### 2. Backend
 
 ```bash
-ng build
+cd backend
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Crea (o edita) el archivo `backend/.env`:
 
-## Running unit tests
+```env
+DB_HOST=localhost
+DB_USER=tu_usuario
+DB_PASSWORD=tu_contraseña
+DB_NAME=questforgood_in5bv
+DB_PORT=3306
+PORT=3000
+JWT_SECRET=una_clave_larga_y_secreta
+```
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Inicia el servidor:
 
 ```bash
-ng test
+npm run dev
 ```
 
-## Running end-to-end tests
+La API queda en `http://localhost:3000`.
 
-For end-to-end (e2e) testing, run:
+### 3. Frontend
 
 ```bash
-ng e2e
+cd frontend
+npm install
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Abre `http://localhost:4200`.
 
-## Additional Resources
+> Si cambias el puerto o la URL del backend, actualiza `BASE_URL` en `frontend/src/app/config.ts`.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+##  Usuarios de prueba
+
+Todos los usuarios de prueba comparten la misma contraseña hash incluida en los scripts. Consulta con tu equipo la contraseña en texto plano o genera una nueva con bcrypt.
+
+| Rol | Correo |
+|-----|--------|
+| Administrador | `admin@questforgood.com` |
+| Moderador | `luis@test.com` |
+| Cliente | `ana@test.com`, `carlos@test.com`, `sofia@test.com`, … |
+
+##  Endpoints principales
+
+| Método | Ruta | Acceso |
+|--------|------|--------|
+| POST | `/api/usuarios/registro` · `/api/usuarios/login` | Público |
+| GET | `/api/juegos` · `/api/juegos/:id` · `/api/juegos/categorias` | Público |
+| GET | `/api/causas` · `/api/causas/:id` | Público |
+| GET | `/api/metodos-pago` · `/api/estadisticas` | Público |
+| POST | `/api/compras` | Usuario autenticado |
+| GET | `/api/compras/usuario/:id` | Dueño o admin |
+| GET/PUT | `/api/perfil` | Usuario autenticado |
+| POST/DELETE | `/api/perfil/foto` · `/api/perfil/intereses` | Usuario autenticado |
+| POST/PUT/DELETE | `/api/juegos` · `/api/causas` | Solo admin |
+| POST | `/api/uploads/juegos?nombre=...` | Solo admin |
+
+## Más documentación
+
+Consulta la **Documentación técnica** y el **Manual de usuario** para el detalle de arquitectura, modelo de datos, reglas de negocio y guía de uso.
+
+##  Notas
+- Los pagos son **simulados**: no se procesa dinero real.
+- No subas el archivo `.env` a repositorios públicos.
