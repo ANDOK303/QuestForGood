@@ -206,3 +206,6 @@ select u.id, j.id
 from usuarios u
 join juegos j on j.nombre in ('Elden Ring', 'Hades', 'Minecraft')
 where u.correo = 'andok@gmail.com';
+UPDATE usuarios SET rol_id = 1 WHERE id > 0 AND correo = 'ana@test.com';
+INSERT INTO usuarios (rol_id, nombre, correo, contrasena)
+VALUES (1, 'Administrador', 'admin@questforgood.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.');
