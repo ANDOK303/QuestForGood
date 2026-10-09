@@ -1,198 +1,208 @@
-USE questforgood_in5bv;
+use questforgood_in5bv;
 
-ALTER TABLE usuarios ADD COLUMN foto_url VARCHAR(255) NULL;
+alter table usuarios add column foto_url varchar(255) null;
 
-CREATE TABLE intereses (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    juego_id INT NOT NULL,
-    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE KEY uq_interes (usuario_id, juego_id),
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (juego_id) REFERENCES juegos(id) ON DELETE CASCADE
+create table intereses (
+    id int auto_increment primary key,
+    usuario_id int not null,
+    juego_id int not null,
+    fecha timestamp default current_timestamp,
+    unique key uq_interes (usuario_id, juego_id),
+    foreign key (usuario_id) references usuarios(id) on delete cascade,
+    foreign key (juego_id) references juegos(id) on delete cascade
 );
 
-CREATE TABLE cupones (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    codigo VARCHAR(30) NOT NULL UNIQUE,
-    descripcion VARCHAR(150),
-    descuento_extra DECIMAL(5,2) NOT NULL,
-    tipo VARCHAR(20) NOT NULL DEFAULT 'exclusivo',
-    dias_vigencia INT NOT NULL DEFAULT 7
+create table cupones (
+    id int auto_increment primary key,
+    codigo varchar(30) not null unique,
+    descripcion varchar(150),
+    descuento_extra decimal(5,2) not null,
+    tipo varchar(20) not null default 'exclusivo',
+    dias_vigencia int not null default 7
 );
 
-CREATE TABLE usuarios_cupones (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    cupon_id INT NOT NULL,
-    usado BOOLEAN NOT NULL DEFAULT FALSE,
-    fecha_obtenido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fecha_expira DATETIME NULL,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    FOREIGN KEY (cupon_id) REFERENCES cupones(id)
+create table usuarios_cupones (
+    id int auto_increment primary key,
+    usuario_id int not null,
+    cupon_id int not null,
+    usado boolean not null default false,
+    fecha_obtenido timestamp default current_timestamp,
+    fecha_expira datetime null,
+    foreign key (usuario_id) references usuarios(id) on delete cascade,
+    foreign key (cupon_id) references cupones(id)
 );
 
-ALTER TABLE compras ADD COLUMN usuario_cupon_id INT NULL;
+alter table compras add column usuario_cupon_id int null;
 
-ALTER TABLE compras ADD CONSTRAINT fk_compras_usuario_cupon FOREIGN KEY (usuario_cupon_id) REFERENCES usuarios_cupones(id);
+alter table compras add constraint fk_compras_usuario_cupon foreign key (usuario_cupon_id) references usuarios_cupones(id);
 
-INSERT INTO causas (nombre, descripcion) VALUES
-('Océanos Limpios', 'Retira plástico de mares y ríos y apoya a pescadores artesanales.'),
-('Energía Solar Comunitaria', 'Instala paneles solares en escuelas y centros de salud rurales.'),
-('Rescate de Fauna Silvestre', 'Rehabilita y libera animales rescatados del tráfico ilegal.'),
-('Salud para Todos', 'Financia brigadas médicas gratuitas en comunidades sin hospital cercano.'),
-('Becas Escolares', 'Paga útiles, uniformes y matrícula para estudiantes de bajos recursos.'),
-('Vivienda Digna', 'Construye viviendas seguras para familias afectadas por desastres.'),
-('Reciclaje Comunitario', 'Crea centros de acopio y empleo en torno al reciclaje.'),
-('Igualdad en la Educación', 'Impulsa el acceso de niñas y mujeres jóvenes a estudios técnicos.'),
-('Apoyo a Refugiados', 'Entrega kits de higiene, abrigo y alimentos a familias desplazadas.'),
-('Huertos Urbanos', 'Enseña a cultivar alimentos en espacios pequeños de la ciudad.');
+insert into causas (nombre, descripcion) values
+('océanos limpios', 'retira plástico de mares y ríos y apoya a pescadores artesanales.'),
+('energía solar comunitaria', 'instala paneles solares en escuelas y centros de salud rurales.'),
+('rescate de fauna silvestre', 'rehabilita y libera animales rescatados del tráfico ilegal.'),
+('salud para todos', 'financia brigadas médicas gratuitas en comunidades sin hospital cercano.'),
+('becas escolares', 'paga útiles, uniformes y matrícula para estudiantes de bajos recursos.'),
+('vivienda digna', 'construye viviendas seguras para familias afectadas por desastres.'),
+('reciclaje comunitario', 'crea centros de acopio y empleo en torno al reciclaje.'),
+('igualdad en la educación', 'impulsa el acceso de niñas y mujeres jóvenes a estudios técnicos.'),
+('apoyo a refugiados', 'entrega kits de higiene, abrigo y alimentos a familias desplazadas.'),
+('huertos urbanos', 'enseña a cultivar alimentos en espacios pequeños de la ciudad.');
 
-INSERT INTO juegos (categoria_id, nombre, descripcion, precio_original, descuento) VALUES
-((SELECT id FROM categorias WHERE nombre = 'RPG'), 'Elden Ring', 'RPG de acción en un vasto mundo abierto lleno de jefes y secretos.', 59.99, 10.00),
-((SELECT id FROM categorias WHERE nombre = 'RPG'), 'Cyberpunk 2077', 'RPG futurista en Night City con decisiones que cambian la historia.', 59.99, 10.00),
-((SELECT id FROM categorias WHERE nombre = 'Acción'), 'Hades', 'Roguelike de acción donde escapas del inframundo una y otra vez.', 24.99, 10.00),
-((SELECT id FROM categorias WHERE nombre = 'Acción'), 'DOOM Eternal', 'Disparos frenéticos contra hordas demoníacas a toda velocidad.', 39.99, 10.00),
-((SELECT id FROM categorias WHERE nombre = 'Deportes'), 'NBA 2K24', 'Simulador de baloncesto con modo carrera y equipos de la liga.', 59.99, 10.00),
-((SELECT id FROM categorias WHERE nombre = 'Estrategia'), 'Civilization VI', 'Estrategia por turnos para construir un imperio que resista el tiempo.', 39.99, 10.00),
-((SELECT id FROM categorias WHERE nombre = 'Aventura'), 'Hollow Knight', 'Aventura de exploración en un reino subterráneo de insectos.', 14.99, 10.00),
-((SELECT id FROM categorias WHERE nombre = 'Aventura'), 'Minecraft', 'Construye, explora y sobrevive en mundos generados sin límites.', 29.99, 10.00),
-((SELECT id FROM categorias WHERE nombre = 'Multijugador'), 'Among Us', 'Descubre al impostor en una nave antes de que sea tarde.', 4.99, 10.00),
-((SELECT id FROM categorias WHERE nombre = 'Multijugador'), 'It Takes Two', 'Aventura cooperativa para dos jugadores llena de ideas originales.', 39.99, 10.00);
+insert into juegos (categoria_id, nombre, descripcion, precio_original, descuento) values
+((select id from categorias where nombre = 'RPG'), 'elden ring', 'rpg de acción en un vasto mundo abierto lleno de jefes y secretos.', 59.99, 10.00),
+((select id from categorias where nombre = 'RPG'), 'cyberpunk 2077', 'rpg futurista en night city con decisiones que cambian la historia.', 59.99, 10.00),
+((select id from categorias where nombre = 'Acción'), 'hades', 'roguelike de acción donde escapas del inframundo una y otra vez.', 24.99, 10.00),
+((select id from categorias where nombre = 'Acción'), 'doom eternal', 'disparos frenéticos contra hordas demoníacas a toda velocidad.', 39.99, 10.00),
+((select id from categorias where nombre = 'Deportes'), 'nba 2k24', 'simulador de baloncesto con modo carrera y equipos de la liga.', 59.99, 10.00),
+((select id from categorias where nombre = 'Estrategia'), 'civilization vi', 'estrategia por turnos para construir un imperio que resista el tiempo.', 39.99, 10.00),
+((select id from categorias where nombre = 'Aventura'), 'hollow knight', 'aventura de exploración en un reino subterráneo de insectos.', 14.99, 10.00),
+((select id from categorias where nombre = 'Aventura'), 'minecraft', 'construye, explora y sobrevive en mundos generados sin límites.', 29.99, 10.00),
+((select id from categorias where nombre = 'Multijugador'), 'among us', 'descubre al impostor en una nave antes de que sea tarde.', 4.99, 10.00),
+((select id from categorias where nombre = 'Multijugador'), 'it takes two', 'aventura cooperativa para dos jugadores llena de ideas originales.', 39.99, 10.00);
 
-INSERT INTO usuarios (rol_id, nombre, correo, contrasena) VALUES
-(2, 'Ana Morales', 'ana@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
-(2, 'Carlos Méndez', 'carlos@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
-(2, 'Sofía Ramírez', 'sofia@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
-(2, 'Diego Castillo', 'diego@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
-(2, 'Valeria Ortiz', 'valeria@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
-(3, 'Luis Herrera', 'luis@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
-(2, 'Camila Reyes', 'camila@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
-(2, 'Javier Solís', 'javier@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
-(2, 'Daniela Cruz', 'daniela@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
-(2, 'Mateo Lima', 'mateo@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.');
+insert into usuarios (rol_id, nombre, correo, contrasena) values
+(2, 'ana morales', 'ana@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
+(2, 'carlos méndez', 'carlos@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
+(2, 'sofía ramírez', 'sofia@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
+(2, 'diego castillo', 'diego@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
+(2, 'valeria ortiz', 'valeria@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
+(3, 'luis herrera', 'luis@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
+(2, 'camila reyes', 'camila@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
+(2, 'javier solís', 'javier@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
+(2, 'daniela cruz', 'daniela@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.'),
+(2, 'mateo lima', 'mateo@test.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.');
 
-INSERT INTO cupones (codigo, descripcion, descuento_extra, tipo, dias_vigencia) VALUES
-('LOGINBRONCE', 'Regalo por iniciar sesión hoy', 3.00, 'login', 3),
-('LOGINPLATA', 'Regalo por iniciar sesión hoy', 5.00, 'login', 3),
-('LOGINORO', 'Regalo especial por iniciar sesión hoy', 10.00, 'login', 3),
-('BIENVENIDO5', '5% extra por unirte a QuestForGood', 5.00, 'exclusivo', 30),
-('DONADOR10', '10% extra para donadores constantes', 10.00, 'exclusivo', 30),
-('IMPACTO15', '15% extra para quienes superan los 20 dólares donados', 15.00, 'exclusivo', 30),
-('FINDE7', '7% extra solo por el fin de semana', 7.00, 'exclusivo', 3),
-('RPGMANIA', '8% extra en tu próximo juego de rol', 8.00, 'exclusivo', 14),
-('ESTUDIANTE12', '12% extra para estudiantes', 12.00, 'exclusivo', 30),
-('GAMER20', '20% extra, edición limitada', 20.00, 'exclusivo', 7);
+insert into cupones (codigo, descripcion, descuento_extra, tipo, dias_vigencia) values
+('loginbronce', 'regalo por iniciar sesión hoy', 3.00, 'login', 3),
+('loginplata', 'regalo por iniciar sesión hoy', 5.00, 'login', 3),
+('loginoro', 'regalo especial por iniciar sesión hoy', 10.00, 'login', 3),
+('bienvenido5', '5% extra por unirte a questforgood', 5.00, 'exclusivo', 30),
+('donador10', '10% extra para donadores constantes', 10.00, 'exclusivo', 30),
+('impacto15', '15% extra para quienes superan los 20 dólares donados', 15.00, 'exclusivo', 30),
+('finde7', '7% extra solo por el fin de semana', 7.00, 'exclusivo', 3),
+('rpgmania', '8% extra en tu próximo juego de rol', 8.00, 'exclusivo', 14),
+('estudiante12', '12% extra para estudiantes', 12.00, 'exclusivo', 30),
+('gamer20', '20% extra, edición limitada', 20.00, 'exclusivo', 7);
 
-INSERT INTO compras (usuario_id, juego_id, causa_id, metodo_pago_id, monto_pagado, monto_donado, fecha)
-SELECT u.id, j.id, c.id, mp.id,
-       ROUND(j.precio_original * (1 - j.descuento / 100), 2),
-       ROUND(j.precio_original * (1 - j.descuento / 100) * 0.05, 2),
+insert into compras (usuario_id, juego_id, causa_id, metodo_pago_id, monto_pagado, monto_donado, fecha)
+select u.id, j.id, c.id, mp.id,
+       round(j.precio_original * (1 - j.descuento / 100), 2),
+       round(j.precio_original * (1 - j.descuento / 100) * 0.05, 2),
        t.fecha
-FROM (
-    SELECT 'ana@test.com' AS correo, 'Elden Ring' AS juego, 'Reforestación Global' AS causa, 'Tarjeta de crédito' AS metodo, '2026-07-12 18:20:00' AS fecha
-    UNION ALL SELECT 'carlos@test.com', 'Hades', 'Agua para Todos', 'PayPal', '2026-07-19 20:05:00'
-    UNION ALL SELECT 'sofia@test.com', 'Minecraft', 'Educación Digital', 'Tarjeta de débito', '2026-08-03 16:40:00'
-    UNION ALL SELECT 'diego@test.com', 'NBA 2K24', 'Alimentación Infantil', 'Tarjeta de crédito', '2026-08-09 21:15:00'
-    UNION ALL SELECT 'valeria@test.com', 'Hollow Knight', 'Océanos Limpios', 'PayPal', '2026-08-17 13:30:00'
-    UNION ALL SELECT 'luis@test.com', 'Cyberpunk 2077', 'Energía Solar Comunitaria', 'Transferencia bancaria', '2026-08-25 19:00:00'
-    UNION ALL SELECT 'camila@test.com', 'It Takes Two', 'Becas Escolares', 'Tarjeta de débito', '2026-09-02 17:45:00'
-    UNION ALL SELECT 'javier@test.com', 'Civilization VI', 'Huertos Urbanos', 'PayPal', '2026-09-08 15:10:00'
-    UNION ALL SELECT 'daniela@test.com', 'Among Us', 'Rescate de Fauna Silvestre', 'Tarjeta de crédito', '2026-09-14 22:00:00'
-    UNION ALL SELECT 'mateo@test.com', 'DOOM Eternal', 'Salud para Todos', 'Tarjeta de crédito', '2026-09-21 18:35:00'
-    UNION ALL SELECT 'ana@test.com', 'Hades', 'Reforestación Global', 'PayPal', '2026-09-27 12:20:00'
-    UNION ALL SELECT 'carlos@test.com', 'Elden Ring', 'Agua para Todos', 'Tarjeta de crédito', '2026-10-01 20:50:00'
-    UNION ALL SELECT 'sofia@test.com', 'Cyberpunk 2077', 'Educación Digital', 'PayPal', '2026-10-03 14:25:00'
-    UNION ALL SELECT 'diego@test.com', 'Minecraft', 'Reciclaje Comunitario', 'Tarjeta de débito', '2026-10-05 19:40:00'
+from (
+    select 'ana@test.com' as correo, 'Elden Ring' as juego, 'Reforestación Global' as causa, 'Tarjeta de crédito' as metodo, '2026-07-12 18:20:00' as fecha
+    union all select 'carlos@test.com', 'Hades', 'Agua para Todos', 'PayPal', '2026-07-19 20:05:00'
+    union all select 'sofia@test.com', 'Minecraft', 'Educación Digital', 'Tarjeta de débito', '2026-08-03 16:40:00'
+    union all select 'diego@test.com', 'NBA 2K24', 'Alimentación Infantil', 'Tarjeta de crédito', '2026-08-09 21:15:00'
+    union all select 'valeria@test.com', 'Hollow Knight', 'Océanos Limpios', 'PayPal', '2026-08-17 13:30:00'
+    union all select 'luis@test.com', 'Cyberpunk 2077', 'Energía Solar Comunitaria', 'Transferencia bancaria', '2026-08-25 19:00:00'
+    union all select 'camila@test.com', 'It Takes Two', 'Becas Escolares', 'Tarjeta de débito', '2026-09-02 17:45:00'
+    union all select 'javier@test.com', 'Civilization VI', 'Huertos Urbanos', 'PayPal', '2026-09-08 15:10:00'
+    union all select 'daniela@test.com', 'Among Us', 'Rescate de Fauna Silvestre', 'Tarjeta de crédito', '2026-09-14 22:00:00'
+    union all select 'mateo@test.com', 'DOOM Eternal', 'Salud para Todos', 'Tarjeta de crédito', '2026-09-21 18:35:00'
+    union all select 'ana@test.com', 'Hades', 'Reforestación Global', 'PayPal', '2026-09-27 12:20:00'
+    union all select 'carlos@test.com', 'Elden Ring', 'Agua para Todos', 'Tarjeta de crédito', '2026-10-01 20:50:00'
+    union all select 'sofia@test.com', 'Cyberpunk 2077', 'Educación Digital', 'PayPal', '2026-10-03 14:25:00'
+    union all select 'diego@test.com', 'Minecraft', 'Reciclaje Comunitario', 'Tarjeta de débito', '2026-10-05 19:40:00'
 ) t
-JOIN usuarios u ON u.correo = t.correo
-JOIN juegos j ON j.nombre = t.juego
-JOIN causas c ON c.nombre = t.causa
-JOIN metodos_pago mp ON mp.nombre = t.metodo;
+join usuarios u on u.correo = t.correo
+join juegos j on j.nombre = t.juego
+join causas c on c.nombre = t.causa
+join metodos_pago mp on mp.nombre = t.metodo;
 
-INSERT INTO resenas (usuario_id, juego_id, calificacion, comentario)
-SELECT u.id, j.id, t.calificacion, t.comentario
-FROM (
-    SELECT 'ana@test.com' AS correo, 'Elden Ring' AS juego, 5 AS calificacion, 'Una obra maestra, y saber que parte de mi compra ayudó a plantar árboles lo hace mejor.' AS comentario
-    UNION ALL SELECT 'carlos@test.com', 'Hades', 5, 'Adictivo desde la primera partida, con una historia que sorprende.'
-    UNION ALL SELECT 'sofia@test.com', 'Minecraft', 4, 'Sigue siendo divertido y ahora además aporta a la educación digital.'
-    UNION ALL SELECT 'diego@test.com', 'NBA 2K24', 3, 'Buenos gráficos, pero el modo carrera se siente repetitivo.'
-    UNION ALL SELECT 'valeria@test.com', 'Hollow Knight', 5, 'Mundo enorme, música preciosa y muchísimo contenido por el precio.'
-    UNION ALL SELECT 'luis@test.com', 'Cyberpunk 2077', 4, 'Después de las actualizaciones quedó muy sólido, la ciudad es impresionante.'
-    UNION ALL SELECT 'camila@test.com', 'It Takes Two', 5, 'Lo jugué con mi hermana y no paramos de reír, cada nivel es distinto.'
-    UNION ALL SELECT 'javier@test.com', 'Civilization VI', 4, 'Perfecto para perder la noche entera planeando el siguiente turno.'
-    UNION ALL SELECT 'daniela@test.com', 'Among Us', 4, 'Ideal para jugar con amigos, mucho mejor si todos hablan.'
-    UNION ALL SELECT 'mateo@test.com', 'DOOM Eternal', 5, 'Acción pura y una banda sonora que pide subir el volumen.'
-    UNION ALL SELECT 'ana@test.com', 'Hades', 4, 'Muy bueno, aunque a veces la dificultad frustra un poco.'
-    UNION ALL SELECT 'carlos@test.com', 'Elden Ring', 5, 'Explorar cada rincón vale la pena, un mundo gigantesco.'
+insert into resenas (usuario_id, juego_id, calificacion, comentario)
+select u.id, j.id, t.calificacion, t.comentario
+from (
+    select 'ana@test.com' as correo, 'Elden Ring' as juego, 5 as calificacion, 'una obra maestra, y saber que parte de mi compra ayudó a plantar árboles lo hace mejor.' as comentario
+    union all select 'carlos@test.com', 'Hades', 5, 'adictivo desde la primera partida, con una historia que sorprende.'
+    union all select 'sofia@test.com', 'Minecraft', 4, 'sigue siendo divertido y ahora además aporta a la educación digital.'
+    union all select 'diego@test.com', 'NBA 2K24', 3, 'buenos gráficos, pero el modo carrera se siente repetitivo.'
+    union all select 'valeria@test.com', 'Hollow Knight', 5, 'mundo enorme, música preciosa y muchísimo contenido por el precio.'
+    union all select 'luis@test.com', 'Cyberpunk 2077', 4, 'después de las actualizaciones quedó muy sólido, la ciudad es impresionante.'
+    union all select 'camila@test.com', 'It Takes Two', 5, 'lo jugué con mi hermana y no paramos de reír, cada nivel es distinto.'
+    union all select 'javier@test.com', 'Civilization VI', 4, 'perfecto para perder la noche entera planeando el siguiente turno.'
+    union all select 'daniela@test.com', 'Among Us', 4, 'ideal para jugar con amigos, mucho mejor si todos hablan.'
+    union all select 'mateo@test.com', 'DOOM Eternal', 5, 'acción pura y una banda sonora que pide subir el volumen.'
+    union all select 'ana@test.com', 'Hades', 4, 'muy bueno, aunque a veces la dificultad frustra un poco.'
+    union all select 'carlos@test.com', 'Elden Ring', 5, 'explorar cada rincón vale la pena, un mundo gigantesco.'
 ) t
-JOIN usuarios u ON u.correo = t.correo
-JOIN juegos j ON j.nombre = t.juego;
+join usuarios u on u.correo = t.correo
+join juegos j on j.nombre = t.juego;
 
-INSERT INTO notificaciones (usuario_id, mensaje, leida)
-SELECT u.id, t.mensaje, t.leida
-FROM (
-    SELECT 'ana@test.com' AS correo, 'Tu compra de Elden Ring ayudó a Reforestación Global.' AS mensaje, 1 AS leida
-    UNION ALL SELECT 'carlos@test.com', 'Tu compra de Hades ayudó a Agua para Todos.', 1
-    UNION ALL SELECT 'sofia@test.com', 'Tu compra de Minecraft ayudó a Educación Digital.', 1
-    UNION ALL SELECT 'diego@test.com', 'Tu compra de NBA 2K24 ayudó a Alimentación Infantil.', 0
-    UNION ALL SELECT 'valeria@test.com', 'Tu compra de Hollow Knight ayudó a Océanos Limpios.', 1
-    UNION ALL SELECT 'luis@test.com', 'Tu compra de Cyberpunk 2077 ayudó a Energía Solar Comunitaria.', 0
-    UNION ALL SELECT 'camila@test.com', 'Tu compra de It Takes Two ayudó a Becas Escolares.', 1
-    UNION ALL SELECT 'javier@test.com', 'Tu compra de Civilization VI ayudó a Huertos Urbanos.', 0
-    UNION ALL SELECT 'daniela@test.com', 'Tu compra de Among Us ayudó a Rescate de Fauna Silvestre.', 1
-    UNION ALL SELECT 'mateo@test.com', 'Tu compra de DOOM Eternal ayudó a Salud para Todos.', 0
-    UNION ALL SELECT 'ana@test.com', 'Tienes un cupón nuevo disponible en tu perfil.', 0
-    UNION ALL SELECT 'carlos@test.com', 'Superaste los 5 dólares donados, gracias por tu impacto.', 0
+insert into notificaciones (usuario_id, mensaje, leida)
+select u.id, t.mensaje, t.leida
+from (
+    select 'ana@test.com' as correo, 'tu compra de elden ring ayudó a reforestación global.' as mensaje, 1 as leida
+    union all select 'carlos@test.com', 'tu compra de hades ayudó a agua para todos.', 1
+    union all select 'sofia@test.com', 'tu compra de minecraft ayudó a educación digital.', 1
+    union all select 'diego@test.com', 'tu compra de nba 2k24 ayudó a alimentación infantil.', 0
+    union all select 'valeria@test.com', 'tu compra de hollow knight ayudó a océanos limpios.', 1
+    union all select 'luis@test.com', 'tu compra de cyberpunk 2077 ayudó a energía solar comunitaria.', 0
+    union all select 'camila@test.com', 'tu compra de it takes two ayudó a becas escolares.', 1
+    union all select 'javier@test.com', 'tu compra de civilization vi ayudó a huertos urbanos.', 0
+    union all select 'daniela@test.com', 'tu compra de among us ayudó a rescate de fauna silvestre.', 1
+    union all select 'mateo@test.com', 'tu compra de doom eternal ayudó a salud para todos.', 0
+    union all select 'ana@test.com', 'tienes un cupón nuevo disponible en tu perfil.', 0
+    union all select 'carlos@test.com', 'superaste los 5 dólares donados, gracias por tu impacto.', 0
 ) t
-JOIN usuarios u ON u.correo = t.correo;
+join usuarios u on u.correo = t.correo;
 
-INSERT INTO intereses (usuario_id, juego_id)
-SELECT u.id, j.id
-FROM (
-    SELECT 'ana@test.com' AS correo, 'Hollow Knight' AS juego
-    UNION ALL SELECT 'ana@test.com', 'Cyberpunk 2077'
-    UNION ALL SELECT 'carlos@test.com', 'DOOM Eternal'
-    UNION ALL SELECT 'carlos@test.com', 'Civilization VI'
-    UNION ALL SELECT 'sofia@test.com', 'It Takes Two'
-    UNION ALL SELECT 'sofia@test.com', 'Hades'
-    UNION ALL SELECT 'diego@test.com', 'Elden Ring'
-    UNION ALL SELECT 'valeria@test.com', 'Minecraft'
-    UNION ALL SELECT 'valeria@test.com', 'Among Us'
-    UNION ALL SELECT 'luis@test.com', 'Elden Ring'
-    UNION ALL SELECT 'camila@test.com', 'Hollow Knight'
-    UNION ALL SELECT 'javier@test.com', 'NBA 2K24'
-    UNION ALL SELECT 'daniela@test.com', 'It Takes Two'
-    UNION ALL SELECT 'mateo@test.com', 'Hades'
+insert into intereses (usuario_id, juego_id)
+select u.id, j.id
+from (
+    select 'ana@test.com' as correo, 'Hollow Knight' as juego
+    union all select 'ana@test.com', 'Cyberpunk 2077'
+    union all select 'carlos@test.com', 'DOOM Eternal'
+    union all select 'carlos@test.com', 'Civilization VI'
+    union all select 'sofia@test.com', 'It Takes Two'
+    union all select 'sofia@test.com', 'Hades'
+    union all select 'diego@test.com', 'Elden Ring'
+    union all select 'valeria@test.com', 'Minecraft'
+    union all select 'valeria@test.com', 'Among Us'
+    union all select 'luis@test.com', 'Elden Ring'
+    union all select 'camila@test.com', 'Hollow Knight'
+    union all select 'javier@test.com', 'NBA 2K24'
+    union all select 'daniela@test.com', 'It Takes Two'
+    union all select 'mateo@test.com', 'Hades'
 ) t
-JOIN usuarios u ON u.correo = t.correo
-JOIN juegos j ON j.nombre = t.juego;
+join usuarios u on u.correo = t.correo
+join juegos j on j.nombre = t.juego;
 
-INSERT INTO usuarios_cupones (usuario_id, cupon_id, usado, fecha_expira)
-SELECT u.id, c.id, t.usado, DATE_ADD(NOW(), INTERVAL c.dias_vigencia DAY)
-FROM (
-    SELECT 'ana@test.com' AS correo, 'BIENVENIDO5' AS codigo, 1 AS usado
-    UNION ALL SELECT 'ana@test.com', 'DONADOR10', 0
-    UNION ALL SELECT 'carlos@test.com', 'IMPACTO15', 0
-    UNION ALL SELECT 'carlos@test.com', 'LOGINPLATA', 0
-    UNION ALL SELECT 'sofia@test.com', 'ESTUDIANTE12', 0
-    UNION ALL SELECT 'diego@test.com', 'RPGMANIA', 0
-    UNION ALL SELECT 'valeria@test.com', 'FINDE7', 1
-    UNION ALL SELECT 'luis@test.com', 'GAMER20', 0
-    UNION ALL SELECT 'camila@test.com', 'LOGINBRONCE', 0
-    UNION ALL SELECT 'javier@test.com', 'BIENVENIDO5', 0
-    UNION ALL SELECT 'daniela@test.com', 'LOGINORO', 0
-    UNION ALL SELECT 'mateo@test.com', 'DONADOR10', 0
+insert into usuarios_cupones (usuario_id, cupon_id, usado, fecha_expira)
+select u.id, c.id, t.usado, date_add(now(), interval c.dias_vigencia day)
+from (
+    select 'ana@test.com' as correo, 'bienvenido5' as codigo, 1 as usado
+    union all select 'ana@test.com', 'donador10', 0
+    union all select 'carlos@test.com', 'impacto15', 0
+    union all select 'carlos@test.com', 'loginplata', 0
+    union all select 'sofia@test.com', 'estudiante12', 0
+    union all select 'diego@test.com', 'rpgmania', 0
+    union all select 'valeria@test.com', 'finde7', 1
+    union all select 'luis@test.com', 'gamer20', 0
+    union all select 'camila@test.com', 'loginbronce', 0
+    union all select 'javier@test.com', 'bienvenido5', 0
+    union all select 'daniela@test.com', 'loginoro', 0
+    union all select 'mateo@test.com', 'donador10', 0
 ) t
-JOIN usuarios u ON u.correo = t.correo
-JOIN cupones c ON c.codigo = t.codigo;
+join usuarios u on u.correo = t.correo
+join cupones c on c.codigo = t.codigo;
 
-UPDATE causas c
-SET c.total_recaudado = (SELECT COALESCE(SUM(m.monto_donado), 0) FROM compras m WHERE m.causa_id = c.id)
-WHERE c.id > 0;
+update causas c
+set c.total_recaudado = (select coalesce(sum(m.monto_donado), 0) from compras m where m.causa_id = c.id)
+where c.id > 0;
 
-UPDATE usuarios u
-SET u.total_donado = (SELECT COALESCE(SUM(m.monto_donado), 0) FROM compras m WHERE m.usuario_id = u.id)
-WHERE u.id > 0;
-INSERT INTO usuarios (rol_id, nombre, correo, contrasena)
-VALUES (1, 'Administrador', 'admin@questforgood.com', '$2b$10$FDjzxE7JVU46/Et9.xn5pu5s581Ifg0VkINPlIkI8rnLE88MPXo7.');
+update usuarios u
+set u.total_donado = (select coalesce(sum(m.monto_donado), 0) from compras m where m.usuario_id = u.id)
+where u.id > 0;
+
+insert into usuarios_cupones (usuario_id, cupon_id, fecha_expira)
+select u.id, c.id, date_add(now(), interval c.dias_vigencia day)
+from usuarios u
+join cupones c on c.codigo in ('bienvenido5', 'gamer20', 'impacto15')
+where u.correo = 'andok@gmail.com';
+
+insert into intereses (usuario_id, juego_id)
+select u.id, j.id
+from usuarios u
+join juegos j on j.nombre in ('Elden Ring', 'Hades', 'Minecraft')
+where u.correo = 'andok@gmail.com';
